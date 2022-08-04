@@ -10,6 +10,7 @@ fi
 # Export variable needed by 'docker build --build-arg'
 export POLICY
 export PLATFORM
+export MANYLINUX_2_31_BASE_OVERRIDE
 
 # get docker default multiarch image prefix for PLATFORM
 if [ "${PLATFORM}" == "x86_64" ]; then
@@ -51,6 +52,15 @@ elif [ "${POLICY}" == "manylinux_2_28" ]; then
 	DEVTOOLSET_ROOTPATH="/opt/rh/gcc-toolset-11/root"
 	PREPEND_PATH="${DEVTOOLSET_ROOTPATH}/usr/bin:"
 	LD_LIBRARY_PATH_ARG="${DEVTOOLSET_ROOTPATH}/usr/lib64:${DEVTOOLSET_ROOTPATH}/usr/lib:${DEVTOOLSET_ROOTPATH}/usr/lib64/dyninst:${DEVTOOLSET_ROOTPATH}/usr/lib/dyninst"
+elif [ "${POLICY}" == "manylinux_2_31" ]; then
+        if [ "${MANYLINUX_2_31_BASE_OVERRIDE:-}" == "" ]; then
+                BASEIMAGE="${MULTIARCH_PREFIX}ubuntu:20.04"
+        else
+                BASEIMAGE="${MANYLINUX_2_31_BASE_OVERRIDE}"
+        fi
+	DEVTOOLSET_ROOTPATH=
+	PREPEND_PATH=
+	LD_LIBRARY_PATH_ARG=
 elif [ "${POLICY}" == "musllinux_1_1" ]; then
 	BASEIMAGE="${MULTIARCH_PREFIX}alpine:3.12"
 	DEVTOOLSET_ROOTPATH=

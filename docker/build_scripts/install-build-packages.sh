@@ -15,7 +15,7 @@ if [ "${AUDITWHEEL_POLICY}" == "manylinux2014" ] || [ "${AUDITWHEEL_POLICY}" == 
 		PACKAGE_MANAGER=dnf
 	fi
 	COMPILE_DEPS="bzip2-devel ncurses-devel readline-devel tk-devel gdbm-devel libpcap-devel xz-devel openssl openssl-devel keyutils-libs-devel krb5-devel libcom_err-devel libidn-devel curl-devel uuid-devel libffi-devel kernel-headers libdb-devel"
-elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ]; then
+elif [ "${AUDITWHEEL_POLICY}" == "manylinux_2_24" ] || [ "${AUDITWHEEL_POLICY}" == "manylinux_2_31" ]; then
 	PACKAGE_MANAGER=apt
 	COMPILE_DEPS="libbz2-dev libncurses5-dev libreadline-dev tk-dev libgdbm-dev libdb-dev libpcap-dev liblzma-dev openssl libssl-dev libkeyutils-dev libkrb5-dev comerr-dev libidn2-0-dev libcurl4-openssl-dev uuid-dev libffi-dev linux-kernel-headers"
 elif [ "${AUDITWHEEL_POLICY}" == "musllinux_1_1" ]; then
