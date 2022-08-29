@@ -56,4 +56,4 @@ jobs:
         run: docker tag quay.io/pypa/manylinux_2_31_${{ matrix.cpu-arch }} rapidsai/manylinux_2_31_${{ matrix.cpu-arch }}
       - name: Push rapidsai/manylinux containers to DockerHub
         if: ${{ inputs.push }}
-        run: docker push rapidsai/manylinux_2_31_${{ matrix.labels[2] }}
+        run: docker push rapidsai/manylinux_2_31_${{ matrix.cpu-arch }}
