@@ -18,6 +18,10 @@ jobs:
             cpu-arch: x86_64
           - labels: [self-hosted, linux, arm64, cpu4]
             cpu-arch: aarch64
+          - policy: manylinux2014
+            base-image: nvidia/cuda:11.5.1-devel-centos7
+          - policy: manylinux_2_31
+            base-image: nvidia/cuda:11.5.1-devel-ubuntu20.04
     env:
       DOCKERHUB_USERNAME: ${{ secrets.GPUCIBOT_DOCKERHUB_USER }}
       DOCKERHUB_TOKEN: ${{ secrets.GPUCIBOT_DOCKERHUB_TOKEN }}
@@ -42,18 +46,18 @@ jobs:
       - name: Setup cache
         uses: actions/cache@v2
         with:
-          path: .buildx-cache-manylinux_2_31_${{ matrix.cpu-arch }}/*
-          key: buildx-cache-manylinux_2_31-${{ matrix.cpu-arch }}-${{ hashFiles('docker/**') }}
-          restore-keys: buildx-cache-manylinux_2_31-${{ matrix.cpu-arch }}-
-      - name: Build manylinux_2_31 base container
+          path: .buildx-cache-${{ matrix.policy }}_${{ matrix.cpu-arch }}/*
+          key: buildx-cache-${{ matrix.policy }}-${{ matrix.cpu-arch }}-${{ hashFiles('docker/**') }}
+          restore-keys: buildx-cache-${{ matrix.policy }}-${{ matrix.cpu-arch }}-
+      - name: Build ${{ matrix.policy }} base container
         run: >
-          MANYLINUX_2_31_BASE_OVERRIDE="nvidia/cuda:11.5.1-devel-ubuntu20.04"
-          PLATFORM=${{ matrix.cpu-arch }}
           COMMIT_SHA=latest
-          POLICY=manylinux_2_31
+          POLICY=${{ matrix.policy }}
+          PLATFORM=${{ matrix.cpu-arch }}
+          BASEIMAGE_OVERRIDE="${{ matrix.base-image }}"
           ./build.sh
-      - name: Re-tag as rapidsai/manylinux_2_31 containers
-        run: docker tag quay.io/pypa/manylinux_2_31_${{ matrix.cpu-arch }} rapidsai/manylinux_2_31_${{ matrix.cpu-arch }}
+      - name: Re-tag as rapidsai/${{ matrix.policy }} containers
+        run: docker tag quay.io/pypa/${{ matrix.policy }}_${{ matrix.cpu-arch }} rapidsai/${{ matrix.policy }}_${{ matrix.cpu-arch }}
       - name: Push rapidsai/manylinux containers to DockerHub
         if: ${{ inputs.push }}
-        run: docker push rapidsai/manylinux_2_31_${{ matrix.cpu-arch }}
+        run: docker push rapidsai/${{ matrix.policy }}_${{ matrix.cpu-arch }}
