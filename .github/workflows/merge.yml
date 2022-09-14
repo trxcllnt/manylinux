@@ -3,6 +3,7 @@ name: RAPIDS manylinux release
 on:
   push:
     branches:
+      - "manylinux2014_cuda"
       - "manylinux_2_31_cuda"
     paths:
       - 'build.sh'
