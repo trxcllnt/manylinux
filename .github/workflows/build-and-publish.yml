@@ -16,11 +16,22 @@ jobs:
         include:
           - labels: [self-hosted, linux, amd64, cpu4]
             cpu-arch: x86_64
+            policy: manylinux2014
+            base-image: nvidia/cuda:11.5.1-devel-centos7
+
+          - labels: [self-hosted, linux, amd64, cpu4]
+            cpu-arch: x86_64
+            policy: manylinux_2_31
+            base-image: nvidia/cuda:11.5.1-devel-ubuntu20.04
+
           - labels: [self-hosted, linux, arm64, cpu4]
             cpu-arch: aarch64
-          - policy: manylinux2014
+            policy: manylinux2014
             base-image: nvidia/cuda:11.5.1-devel-centos7
-          - policy: manylinux_2_31
+
+          - labels: [self-hosted, linux, arm64, cpu4]
+            cpu-arch: aarch64
+            policy: manylinux_2_31
             base-image: nvidia/cuda:11.5.1-devel-ubuntu20.04
     env:
       DOCKERHUB_USERNAME: ${{ secrets.GPUCIBOT_DOCKERHUB_USER }}
